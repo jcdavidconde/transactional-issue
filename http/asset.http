@@ -1,0 +1,88 @@
+### create asset
+POST {{host}}/api/dam/assets
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+Content-Type: application/json
+
+{
+  "name": "Social Asset",
+  "authorId": 6496,
+  "type": "SOCIAL_POST_TEMPLATE",
+  "status": "VISIBLE",
+  "allManagedResources": true,
+  "labels": null,
+  "businessIds": null,
+  "locationIds": null,
+  "excludedLocationIds": null,
+  "locationGroupIds": null,
+  "startDate": "2022-12-08T19:39:00",
+  "endDate": "2023-12-24T19:39:00",
+  "description": "the best social asset",
+  "folderId": 1,
+  "templateId": 88
+}
+
+### get asset
+GET {{host}}/api/dam/assets/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+
+### get asset list
+GET {{host}}/api/dam/assets?type=SOCIAL_POST_TEMPLATE&location_ids=377269&businessIds=123337&folder_statuses=HIDDEN&query=social
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+
+### get asset types
+GET {{host}}/api/dam/assets/types
+
+### update asset
+PATCH {{host}}/api/dam/assets/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+
+{
+  "name": "My updated asset",
+  "description": "My updated description",
+  "status": "HIDDEN",
+  "startDate": "2022-12-20T19:39:00",
+  "endDate": "2023-12-24T19:39:00",
+  "allManagedResources": true,
+  "labels": null,
+  "businessIds": null,
+  "locationIds": null,
+  "excludedLocationIds": null,
+  "locationGroupIds": null,
+  "folderId": 5
+}
+
+### delete asset
+DELETE {{host}}/api/dam/assets/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: LOCATION_MANAGER
+X-Uberall-Access-Token: dey32e82392
+
+### increment asset's usage count
+POST {{host}}/api/dam/assets/{{id}}/increment-usage-count
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: LOCATION_MANAGER
+X-Uberall-Access-Token: dey32e82392

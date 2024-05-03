@@ -1,0 +1,67 @@
+### get folders intenally
+POST {{host}}/internal/dam/folders
+Content-Type: application/json
+
+{
+  "locationIds": [
+    3,
+    4
+  ],
+  "offset": 0,
+  "max": 5
+}
+
+### get assets intenally
+POST {{host}}/internal/dam/assets
+Content-Type: application/json
+
+{
+  "folderId": 1,
+  "businessId": 123337,
+  "locationIds": [
+    123766,
+    123767
+  ],
+  "offset": 0,
+  "max": 5
+}
+
+### activate assets
+POST {{host}}/internal/dam/assets/activation
+Content-Type: application/json
+
+{
+  "startDate": "2023-01-04"
+}
+
+### deactivate assets
+POST {{host}}/internal/dam/assets/deactivation
+Content-Type: application/json
+
+{
+  "endDate": "2023-12-11"
+}
+
+### delete obsolete asset links
+POST {{host}}/internal/dam/assets/obsolete-location-deletion
+Content-Type: application/json
+
+{
+  "salesPartnerIds": [2]
+}
+
+### get folder by name and author
+GET {{host}}/internal/dam/folders/migration?name=Test Folder&authorId=371371
+Content-Type: application/json
+
+### asset exists
+POST {{host}}/internal/dam/assets/migration
+Content-Type: application/json
+
+{
+  "templateIds": [
+    10396,
+    10382,
+    17
+  ]
+}

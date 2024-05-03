@@ -1,0 +1,101 @@
+# Local environment and default configuration
+app.env: ${GITLAB_ENVIRONMENT_NAME:local}
+
+micronaut:
+  application:
+    name: transactional-issue
+  server:
+    port: 5000
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+        descriptions: true
+        step: PT1M
+    enabled: true
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      swagger-ui:
+        paths: classpath:META-INF/swagger/views/swagger-ui
+        mapping: /documentation/**
+  distributed-lock:
+    dialect: mysql
+
+# Health
+endpoints:
+  health:
+    enabled: true
+    sensitive: false
+    details-visible: anonymous
+  prometheus:
+    enabled: true
+    sensitive: false
+  info:
+    enabled: true
+    sensitive: false
+
+# additional things
+additional:
+  # used for handling uncaught exception, for headers + body maps the sensitive data will be masked
+  sensitiveDataBlacklistedWords: [ "secret", "key", "authorization" ]
+
+# Data for local env
+datasources:
+  default:
+    url: ${APP_DB_URL:`jdbc:mysql://localhost:3320/digitalassetmanagement?generateSimpleParameterMetadata=true&zeroDateTimeBehavior=convertToNull&verifyServerCertificate=false&useSSL=false`}
+    driverClassName: com.mysql.cj.jdbc.Driver
+    username: ${APP_DB_USER:root}
+    password: ${APP_DB_PW:123456}
+    schema-generate: none
+    dialect: MYSQL
+    pooled: true
+    maximum-pool-size: 10
+    minimum-idle: 10
+    initial-size: 10
+    max-lifetime: 600000
+    idle-timeout: 300000
+    leak-detection-threshold: 20000
+
+jpa:
+  default:
+    entity-scan:
+      packages: "com.transactional.dam"
+    properties:
+      hibernate:
+        hbm2ddl:
+          auto: none
+        show_sql: true
+
+liquibase:
+  enabled: true
+  datasources:
+    default:
+      change-log: 'classpath:databasemigrations/liquibase-changelog.xml'
+      enabled: true
+
+jackson:
+  serializationInclusion: ALWAYS
+
+logger:
+  levels:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.zaxxer.hikari.HikariConfig: DEBUG
+    com.zaxxer.hikari: TRACE
+    io.micronaut.http: DEBUG
+    liquibase: DEBUG
+
+cronjob:
+  deleteAssetObsoleteLinks:
+    schedule: ${CRONJOB_DELETE_ASSET_OBSOLETE_LINKS_SCHEDULE:`0 0 1 ? * SUN`}
+    assetPageSize: ${CRONJOB_DELETE_ASSET_OBSOLETE_LINKS_ASSET_PAGE_SIZE:100}
+
+monolith:
+  api:
+    baseUrl: "http://localhost:8080/api"
+    version: "20230518"
+    max: 5000
+    tokenless:
+      baseUrl: "http://localhost:8080/api"

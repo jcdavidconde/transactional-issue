@@ -1,0 +1,58 @@
+### create folder
+POST {{host}}/api/dam/folders
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+
+{
+  "name": "Social post Template folder",
+  "authorId": 6496,
+  "type": "SOCIAL_POST_TEMPLATE",
+  "status": "VISIBLE",
+  "description": "the best folder"
+}
+
+### get folder
+GET {{host}}/api/dam/folders/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: LOCATION_MANAGER
+X-Uberall-Access-Token: dey32e82392
+
+### get folder list
+GET {{host}}/api/dam/folders?type=SOCIAL_POST_TEMPLATE&statuses=VISIBLE&asset_statuses=VISIBLE&location_ids=3
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: ADMIN
+X-Uberall-Access-Token: dey32e82392
+
+### update folder
+PATCH {{host}}/api/dam/folders/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: LOCATION_MANAGER
+X-Uberall-Access-Token: dey32e82392
+
+{
+  "name": "My updated folder",
+  "description": "My updated description",
+  "status": "VISIBLE"
+}
+
+### delete folder
+DELETE {{host}}/api/dam/folders/{{id}}
+Content-Type: application/json
+X-Uberall-User-ID: 6496
+X-Uberall-User-Features: DAM
+X-Uberall-Sales-Partner-ID: 2
+X-Uberall-User-Role: LOCATION_MANAGER
+X-Uberall-Access-Token: dey32e82392
+

@@ -1,0 +1,360 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                                       http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+
+    <changeSet id="create folder table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="folder"/>
+            </not>
+        </preConditions>
+        <createTable tableName="folder">
+            <column name="id" type="bigint(20)" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(250)"/>
+            <column name="date_created" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_updated" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint(20)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create asset table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset">
+            <column name="id" type="bigint(20)" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(60)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="varchar(250)"/>
+            <column name="date_created" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="date_updated" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="author_id" type="bigint(20)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="folder_id" type="bigint(20)">
+                <constraints foreignKeyName="FK_ASSET_FOLDER" referencedTableName="folder" referencedColumnNames="id"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="update asset folderId value to be mandatory" author="X">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="asset" columnName="folder_id"/>
+        </preConditions>
+        <sql>ALTER TABLE asset MODIFY folder_id BIGINT(20) NOT NULL</sql>
+    </changeSet>
+
+    <changeSet id="create asset_location table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset_location"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset_location">
+            <column name="asset_id" type="bigint(20)">
+                <constraints nullable="false" foreignKeyName="FK_ASSET_LOCATION_ASSET" referencedTableName="asset" referencedColumnNames="id" primaryKey="true"/>
+            </column>
+            <column name="location_id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create asset_business table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset_business"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset_business">
+            <column name="asset_id" type="bigint(20)">
+                <constraints nullable="false" foreignKeyName="FK_ASSET_BUSINESS_ASSET" referencedTableName="asset" referencedColumnNames="id" primaryKey="true"/>
+            </column>
+            <column name="business_id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="fix asset author Id value to be mandatory" author="X">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="asset" columnName="author_id"/>
+        </preConditions>
+        <sql>ALTER TABLE asset MODIFY author_id BIGINT(20) NOT NULL</sql>
+    </changeSet>
+
+    <changeSet id="add sales partner Id to asset table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="asset" columnName="sales_partner_id"/>
+            </not>
+        </preConditions>
+        <sql>ALTER TABLE asset ADD sales_partner_id BIGINT(20) NOT NULL</sql>
+    </changeSet>
+
+    <changeSet id="add end date to asset table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="asset" columnName="end_date"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="asset">
+            <column name="end_date" type="datetime"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add start date to asset table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="asset" columnName="start_date"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="asset">
+            <column name="start_date" type="datetime" defaultValueComputed="CURRENT_TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="create distributed lock table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="distributed_lock"/>
+            </not>
+        </preConditions>
+        <createTable tableName="distributed_lock">
+            <column name="id" type="bigint(20)" autoIncrement="true">
+                <constraints primaryKey="true"/>
+            </column>
+            <column name="name" type="varchar(255)">
+                <constraints unique="true" nullable="false"/>
+            </column>
+            <column name="until" type="datetime"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="remove asset_business table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="asset_business"/>
+        </preConditions>
+        <dropTable tableName="asset_business"/>
+    </changeSet>
+
+    <changeSet id="add template Id to asset table" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="asset" columnName="template_id"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="asset">
+            <column name="template_id" type="bigint(20)" defaultValue="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="create asset_excluded_location table" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset_excluded_location"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset_excluded_location">
+            <column name="asset_id" type="bigint(20)">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="FK_ASSET_ASSET_EXCLUDED_LOCATION" referencedTableName="asset" referencedColumnNames="id"/>
+            </column>
+            <column name="asset_excluded_location" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="modify asset_excluded_location column" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="asset_excluded_location" columnName="asset_excluded_location"/>
+        </preConditions>
+        <sql>ALTER TABLE asset_excluded_location RENAME COLUMN asset_excluded_location TO excluded_location_id</sql>
+    </changeSet>
+
+    <changeSet id="create asset_location_group table" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset_location_group"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset_location_group">
+            <column name="asset_id" type="bigint(20)">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="FK_ASSET_ASSET_LOCATION_GROUP" referencedTableName="asset" referencedColumnNames="id"/>
+            </column>
+            <column name="location_group_id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add full text index on asset name and description" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <tableExists tableName="asset"/>
+            <and>
+                <columnExists tableName="asset" columnName="name"/>
+                <columnExists tableName="asset" columnName="description"/>
+                <not>
+                    <indexExists indexName="idx_asset_name_description"/>
+                </not>
+            </and>
+        </preConditions>
+        <sql>ALTER TABLE asset ADD FULLTEXT INDEX idx_asset_name_description (name, description);</sql>
+    </changeSet>
+
+    <changeSet id="update asset name to be varchar(250)" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="asset" columnName="name"/>
+        </preConditions>
+        <modifyDataType tableName="asset" columnName="name" newDataType="VARCHAR(250)"/>
+    </changeSet>
+
+    <changeSet id="update asset description to be varchar(4096)" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <columnExists tableName="asset" columnName="description"/>
+        </preConditions>
+        <modifyDataType tableName="asset" columnName="description" newDataType="VARCHAR(4096)"/>
+    </changeSet>
+
+    <changeSet id="Add sales_partner_id index to asset" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="asset" indexName="sales_partner_id_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX sales_partner_id_idx ON asset (sales_partner_id);</sql>
+    </changeSet>
+
+    <changeSet id="create asset_business table" author="Luca Fornelli">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <tableExists tableName="asset_business"/>
+            </not>
+        </preConditions>
+        <createTable tableName="asset_business">
+            <column name="asset_id" type="bigint(20)">
+                <constraints nullable="false" primaryKey="true" foreignKeyName="FK_ASSET_ASSET_BUSINESS" referencedTableName="asset" referencedColumnNames="id"/>
+            </column>
+            <column name="business_id" type="bigint(20)">
+                <constraints primaryKey="true"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="Add asset_id index to asset_business" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="asset_business" indexName="asset_id_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX asset_id_idx ON asset_business (asset_id);</sql>
+    </changeSet>
+
+    <changeSet id="Add asset_id index to asset_location" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="asset_location" indexName="asset_id_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX asset_id_idx ON asset_location (asset_id);</sql>
+    </changeSet>
+
+    <changeSet id="Add folder_id index to asset" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="asset" indexName="folder_id_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX folder_id_idx ON asset (folder_id);</sql>
+    </changeSet>
+
+    <changeSet id="Add author_id index to folder" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="folder" indexName="author_id_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX author_id_idx ON folder (author_id);</sql>
+    </changeSet>
+
+    <changeSet id="Drop status index from folder" author="X">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="folder" indexName="status_idx"/>
+        </preConditions>
+        <dropIndex tableName="folder" indexName="status_idx"/>
+    </changeSet>
+
+    <changeSet id="Add status index to folder" author="X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <indexExists tableName="folder" indexName="status_idx"/>
+            </not>
+        </preConditions>
+        <sql>CREATE INDEX status_idx ON folder (status);</sql>
+    </changeSet>
+
+    <changeSet id="Drop asset_id index from asset_business" author="X">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="asset_business" indexName="asset_id_idx"/>
+        </preConditions>
+        <dropIndex tableName="asset_business" indexName="asset_id_idx"/>
+    </changeSet>
+
+    <changeSet id="Drop asset_id index from asset_location" author="X">
+        <preConditions onFail="MARK_RAN">
+            <indexExists tableName="asset_location" indexName="asset_id_idx"/>
+        </preConditions>
+        <dropIndex tableName="asset_location" indexName="asset_id_idx"/>
+    </changeSet>
+
+    <changeSet id="add column usage_count to assets" author= "X">
+        <preConditions onFail="MARK_RAN">
+            <not>
+                <columnExists tableName="asset" columnName="usage_count"/>
+            </not>
+        </preConditions>
+        <addColumn tableName="asset">
+            <column name="usage_count" type="bigint(20)" defaultValueNumeric="0">
+                <constraints nullable="false"/>
+            </column>
+        </addColumn>
+    </changeSet>
+
+</databaseChangeLog>
